@@ -10,15 +10,18 @@ import (
 var _ = fmt.Fprint
 
 func main() {
-	// Uncomment this block to pass the first stage
-	fmt.Fprint(os.Stdout, "$ ")
+	
+	for {
+		fmt.Fprint(os.Stdout, "$ ")
 
-	// Wait for user input
-	command, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading input:", err)
-		os.Exit(1)
+		command, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error reading input:", err)
+			os.Exit(1)
+		}
+
+		
+		// Since the string returned by ReadString('\n') includes a trailing newline
+		fmt.Println(command[:len(command)-1] + ": command not found")
 	}
-	// Since the string returned by ReadString('\n') includes a trailing newline
-	fmt.Println(command[:len(command)-1] + ": not found")
 }

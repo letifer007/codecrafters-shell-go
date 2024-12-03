@@ -20,6 +20,9 @@ func main() {
 			os.Exit(1)
 		}
 
+		if command == "exit\n" {
+			os.Exit(0)
+		}
 		
 		// Since the string returned by ReadString('\n') includes a trailing newline
 		fmt.Println(command[:len(command)-1] + ": command not found")

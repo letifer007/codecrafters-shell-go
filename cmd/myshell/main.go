@@ -15,16 +15,19 @@ func main() {
 		fmt.Fprint(os.Stdout, "$ ")
 
 		command, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		
+		// Since the string returned by ReadString('\n') includes a trailing newline
+		command = command[:len(command) - 1]
+
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error reading input:", err)
 			os.Exit(1)
 		}
 
-		if command == "exit\n" {
+		if command == "exit 0" {
 			os.Exit(0)
 		}
-		
-		// Since the string returned by ReadString('\n') includes a trailing newline
-		fmt.Println(command[:len(command)-1] + ": command not found")
+
+		fmt.Println(command + ": command not found")
 	}
 }

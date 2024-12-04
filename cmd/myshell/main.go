@@ -12,6 +12,8 @@ func main() {
 	const (
 		EXIT = "exit"
 		ECHO = "echo"
+		TYPE = "type"
+		BUILTIN = " is a shell builtin"
 	)
 	
 	for {
@@ -21,9 +23,23 @@ func main() {
 	
 		// Since the string returned by ReadString('\n') includes a trailing newline
 		input = strings.TrimSpace(input)
+		input_split := strings.SplitN(input, " ", 2)
+
+		if strings.HasPrefix(input, TYPE) {
+			if input_split[1] == EXIT {
+				fmt.Fprintln(os.Stdout, EXIT+BUILTIN)
+			} else if input_split[1] == ECHO {
+				fmt.Fprintln(os.Stdout, ECHO+BUILTIN)
+			} else if input_split[1] == TYPE {
+				fmt.Fprintln(os.Stdout, TYPE+BUILTIN)
+			} else {
+				fmt.Fprintln(os.Stdout, input_split[1] + ": not found")
+			}
+			continue
+		}
 
 		if strings.HasPrefix(input, ECHO) {
-			args := strings.TrimSpace(strings.Join(strings.Split(input, "echo"), ""))
+			args := input_split[1]
 			fmt.Fprintln(os.Stdout, args)
 			continue
 		}

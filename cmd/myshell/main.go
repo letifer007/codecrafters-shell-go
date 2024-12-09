@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -44,9 +45,9 @@ func main() {
 			default:
 				found := false
 				for _, path := range paths {
-					exec := path + "/" + args
-					if _, err := os.Stat(exec); err == nil {
-						fmt.Fprintln(os.Stdout, args + " is " + exec)
+					executable := path + "/" + args
+					if _, err := os.Stat(executable); err == nil {
+						fmt.Fprintln(os.Stdout, args + " is " + executable)
 						found = true
 						break
 					}
@@ -58,7 +59,25 @@ func main() {
 		} else if cmd == ECHO {
 			fmt.Fprintln(os.Stdout, args)
 		} else {
-			fmt.Fprintln(os.Stderr, input + ": command not found")
+			found := false
+			for _, path := range paths {
+				executable := path + "/" + cmd
+				if _, err := os.Stat(executable); err == nil {
+					execCmd := exec.Command(cmd, args)
+					output, err := execCmd.CombinedOutput()
+					if err != nil {
+						fmt.Fprintln(os.Stderr, "Error executing the program:", err)
+						break
+					} else {
+						fmt.Fprint(os.Stdout, string(output))
+						found = true
+						break
+					}
+				}
+			} 
+			if !found {
+				fmt.Fprintln(os.Stderr, input + ": command not found")
+			}
 		}
 	}
 }

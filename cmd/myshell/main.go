@@ -15,6 +15,7 @@ func main() {
 		ECHO = "echo"
 		TYPE = "type"
 		BUILTIN = " is a shell builtin"
+		PWD = "pwd"
 	)
 	
 	for {
@@ -40,7 +41,7 @@ func main() {
 			os.Exit(0)
 		} else if cmd == TYPE {
 			switch args {
-			case ECHO, TYPE, EXIT:
+			case ECHO, TYPE, EXIT, PWD:
 				fmt.Fprintln(os.Stdout, args + " is a shell builtin")
 			default:
 				found := false
@@ -58,6 +59,12 @@ func main() {
 			}
 		} else if cmd == ECHO {
 			fmt.Fprintln(os.Stdout, args)
+		} else if cmd == PWD {
+			cwd, err := os.Getwd()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error printing working directory:", err)
+			}
+			fmt.Fprintln(os.Stdout, cwd)
 		} else {
 			found := false
 			for _, path := range paths {
